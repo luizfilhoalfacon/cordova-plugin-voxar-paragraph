@@ -1,0 +1,6 @@
+framework module VoxarAnalytics {
+  umbrella header "VoxarAnalytics.h"
+
+  export *
+  module * { export * }
+}

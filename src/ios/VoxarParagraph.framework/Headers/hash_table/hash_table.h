@@ -1,0 +1,123 @@
+#ifndef __GUARD_HASH_TABLE_H__
+#define __GUARD_HASH_TABLE_H__
+
+#ifdef __USEVOXARPARAGRAPH__
+#include "voxarparagraph/hash_table/HashTable.h"
+#else
+#include "hash_table/HashTable.h"
+#endif
+
+#define W_COMPACT_ENTRY
+
+#ifdef W_COMPACT_ENTRY
+	#define ENTRY_MASK_KEY		0xFFE00000u
+	#define ENTRY_MASK_POINT	0x001FFFFFu
+	#define ENTRY_SHIFT_KEY		21
+#endif
+
+class Hash_Table : HashTable {
+
+public:
+    typedef std::unordered_map<unsigned int, std::list<std::pair<document_id_type, Point2> > > map_type;
+
+    typedef map_type::iterator map_iterator;
+    typedef map_type::const_iterator const_iterator;
+    typedef map_type::size_type size_type;
+
+private:
+	map_iterator begin() { return m_data.begin(); }
+	map_iterator end() { return m_data.end(); }
+
+	map_iterator find(unsigned int key);
+
+
+	map_iterator erase(const_iterator position);
+    size_type erase(const unsigned int key);
+public:
+    const_iterator begin() const { return m_data.begin(); }
+    const_iterator end() const { return m_data.end(); }
+    Hash_Table(unsigned int hash_size, 
+        const std::string& page_common_filename = "hash-table-" + std::to_string(timestamp()) + "-page-");
+    Hash_Table(unsigned int hash_size, unsigned int n_pages, 
+        const std::string& page_common_filename = "hash-table-" + std::to_string(timestamp()) + "-page-");
+	
+    // Accessor functions
+    unsigned int hash_size() const { return m_hash_size; }
+    unsigned int num_pages() const { return m_n_pages; }
+    unsigned int page() const { return m_current_page; }
+    const std::string& page_filename() const { return m_pages_common_filename; }
+
+    unsigned int page_number(unsigned int key) const;
+
+    void clear() { clear_page(); empty_files(); };
+
+
+	bool insert(unsigned int key, const std::pair<document_id_type, Point2>& value);
+
+	void get_entries(unsigned int key, std::list<std::pair<document_id_type, Point2> >& dst);
+
+    bool serialize(outStreamType& os);
+    bool serialize(const std::string& filename);
+
+    bool deserialize(inStreamType& is, bool adjust_pages = true);
+    bool deserialize(const std::string& filename, bool adjust_pages = true);
+
+private:
+    map_type m_data;
+    const std::string m_pages_common_filename;
+    const unsigned int m_hash_size;
+    unsigned int m_n_pages;
+    unsigned int m_current_page;
+    bool modified;
+
+    static long long timestamp();
+
+    void empty_files();
+
+    bool load_page(unsigned int page);
+
+    void clear_page() { m_data.clear(); }
+
+    bool serialize_page(outStreamType& os) const;
+    bool serialize_page(const std::string& filename) const;
+
+    bool deserialize_page(inStreamType& is, bool should_use_buffer = false, bool should_clear = true);
+    bool deserialize_page(const std::string& filename);
+};
+
+namespace HashWiki {
+	static void getSizes(const Hash_Table &h, SizesType &v){
+		v.clear();
+		Hash_Table::const_iterator it = h.begin();
+		while (it != h.end()) {
+			if (it->second.size() > 0) {
+				v.push_back(std::make_pair((unsigned int)it->second.size(), (unsigned int)it->first));
+			}
+			//break;
+			it++;
+		}
+		std::sort(v.rbegin(), v.rend());
+	}
+	static void printSizes(SizesType &sizes, const Hash_Table &h) {
+		if (HashWikiFile::checkOut()) {
+			for (int i = 0; i < sizes.size(); i++) {
+				fprintf(HashWikiFile::getOutFile(), "%u;%u\n", sizes[i].second, sizes[i].first);
+			}
+		}
+	}
+
+	static void printStatistics(const Hash_Table &h, std::string fileName = "") {
+		if (fileName.size() > 0) {
+			HashWikiFile::setFile(fileName);
+		}
+		if (HashWikiFile::checkOut()) {
+			fprintf(HashWikiFile::getOutFile(),"Statistics\n");
+			SizesType sizes;
+			HashWiki::getSizes(h, sizes);
+			HashWiki::printMetrics(sizes);
+			HashWiki::printSizes(sizes,h);
+		}
+	}
+};
+
+#endif

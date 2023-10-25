@@ -1,0 +1,66 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "cordova-plugin-voxar-paragraph",
+        "scope": null,
+        "escapedName": "cordova-plugin-voxar-paragraph",
+        "name": "cordova-plugin-voxar-paragraph",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      ".\\node_modules"
+    ]
+  ],
+  "_from": "cordova-plugin-voxar-paragraph@latest",
+  "_id": "cordova-plugin-voxar-paragraph@2.0.0",
+  "_nodeVersion": "6.10.1",
+  "_npmVersion": "3.10.10",
+
+  "author": {
+    "name": "Voxar Labs"
+  },
+  "bugs": {
+    "url": ""
+  },
+  "cordova": {
+    "id": "cordova-plugin-voxar-paragraph",
+    "platforms": [
+      "android"
+    ]
+  },
+  "dependencies": {},
+  "description": "Voxar Paragraph Plugin",
+  "devDependencies": {
+    "jshint": "^2.6.0"
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "",
+    "tarball": ""
+  },
+  "engines": {
+    "cordovaDependencies": {
+      "2.0.0": {
+        "cordova": ">100"
+      }
+    }
+  },
+  "homepage": "",
+  "keywords": [
+    "cordova",
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "license": "VoxarLabs",
+  "maintainers": [
+    {
+      "name": "lom",
+      "email": "lom@cin.ufpe.br"
+    }
+  ],
+  "name": "cordova-plugin-voxar-paragraph",
+  
+  "version": "2.0.0"
+}

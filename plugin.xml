@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/* Voxar Labs - CIn/UFPE, Recife, Brazil
+*
+* Copyright(c) 2017-2018 by Voxar Labs - CIn/UFPE
+*
+* This software is the confidential and proprietary information
+* of Voxar Labs - Center of Informatics of the Federal University 
+* of Pernambuco ("Confidential Information"). You
+* shall not disclose such Confidential Information and shall use
+* it only in accordance with the terms of the license agreement
+* you entered into with Voxar Labs CIn/UFPE.
+*
+* Description: pARagraph technology.
+*
+* @author João Gabriel Santiago Mauricio de Abreu (jgsma@cin.ufpe.br),
+*         João Marcelo Xavier Natário Teixeira (jmxnt@cin.ufpe.br),
+*         Lucas Oliveira Maggi (lom@cin.ufpe.br),
+*         Veronica Teichrieb (vt@cin.ufpe.br).
+*
+* @since 2017-04-07
+*/
+-->
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+           id="cordova-plugin-voxar-paragraph"
+      version="2.0.0">
+
+    <name>Voxar pARagraph</name>
+    <description>Voxar pARagraph Plugin</description>
+    <license>Voxar Labs, Apache 2.0</license>
+    <keywords>voxar,paragraph</keywords>
+    <repo></repo>
+    <issue></issue>
+
+    <js-module src="www/paragraph.js" name="voxarparagraph">
+        <merges target="navigator.voxarparagraph" />
+    </js-module>
+
+    <!-- android -->
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="VoxarParagraph">
+                <param name="android-package" value="voxar.paragraph.ParagraphInterface"/>
+            </feature>
+        </config-file>
+
+         <!-- Add our permissions to the Android Manifest -->
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <uses-feature android:name="android.hardware.camera" />
+
+            <uses-permission android:name="android.permission.CAMERA" />
+
+            <uses-permission android:name="android.permission.INTERNET"/>
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+            <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+              <activity android:name="voxar.paragraph.ParagraphCapture">
+                <intent-filter>
+                  <action android:name="voxar.paragraph.intent.action.ParagraphCapture" />
+                  <category android:name="android.intent.category.DEFAULT" />
+                </intent-filter>
+              </activity>
+        </config-file>
+
+        <source-file src="src/android/ParagraphInterface.java" target-dir="src/voxar/paragraph" />
+
+        <source-file src="src/android/classes.jar" target-dir="libs" />
+
+        <resource-file src="src/android/res/layout/activity_paragraph_capture.xml" target="res/layout/activity_paragraph_capture.xml" />
+
+        <source-file src="src/android/jniLibs/armeabi-v7a/libopencv_java3.so" target-dir="libs/armeabi-v7a" />
+        <source-file src="src/android/jniLibs/armeabi-v7a/libc++_shared.so" target-dir="libs/armeabi-v7a" />
+        <source-file src="src/android/jniLibs/armeabi-v7a/libparagraph-lib.so" target-dir="libs/armeabi-v7a" />
+
+        <source-file src="src/android/jniLibs/armeabi/libopencv_java3.so" target-dir="libs/armeabi" />
+        <source-file src="src/android/jniLibs/armeabi/libc++_shared.so" target-dir="libs/armeabi" />
+        <source-file src="src/android/jniLibs/armeabi/libparagraph-lib.so" target-dir="libs/armeabi" />
+
+    </platform>
+    
+    <!-- iOS -->
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="VoxarParagraph">
+            <param name="ios-package" value="VoxarParagraph" />
+            <param name="onload" value="true" />
+        </feature>
+    </config-file>
+    
+    <header-file src="src/ios/VoxarParagraph.h" target-dir="." />
+    <source-file src="src/ios/VoxarParagraph.mm" target-dir="." />
+    <header-file src="src/ios/ImageUtils.h" targer-dir="." />
+    <source-file src="src/ios/ImageUtils.mm" targer-dir="." />
+    <source-file src="src/ios/libjpeg.a" target-dir="." framework="true" />
+    <source-file src="src/ios/libboost.a" target-dir="." framework="true" />
+    
+    <resource-file src="src/ios/pagina.par" target-dir="." />
+    
+    <framework src="Accelerate.framework" />
+    <framework src="AssetsLibrary.framework" />
+    <framework src="AVFoundation.framework" />
+    <framework src="CoreGraphics.framework" />
+    <framework src="CoreImage.framework" />
+    <framework src="CoreMedia.framework" />
+    <framework src="CoreVideo.framework" />
+    <framework src="Foundation.framework" />
+    <framework src="QuartzCore.framework" />
+    <framework src="UIKit.framework" />
+    <framework src="src/ios/opencv2.framework" custom="true" />
+    <framework src="src/ios/VoxarParagraph.framework" custom="true" />
+    <framework src="src/ios/VoxarAnalytics.framework" custom="true" />
+</platform>
+
+</plugin>
